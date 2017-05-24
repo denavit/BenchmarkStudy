@@ -58,7 +58,12 @@ classdef BenchmarkAnalysis2d_Elastic_Sidesway_Uninhibited < BenchmarkAnalysis2d_
             options.Display = 'off';
             [alphacr,~,exitflag] = fsolve(@(alpha)errorK(obj,alpha),...
                 pi/k_guess/obj.L,options);
-            assert(exitflag >= 1,'Could not deterine K');
+            if exitflag <= 0
+                k_guess = 1;
+                [alphacr,~,exitflag] = fsolve(@(alpha)errorK(obj,alpha),...
+                    pi/k_guess/obj.L,options);
+                assert(exitflag >= 1,'Could not deterine K');
+            end
             k = pi/alphacr/obj.L;
         end
         function x = endMomentRatio(obj,P)
