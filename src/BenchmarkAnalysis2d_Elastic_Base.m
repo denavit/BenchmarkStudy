@@ -71,7 +71,7 @@ classdef BenchmarkAnalysis2d_Elastic_Base
                 if M1(i) == 0 || vmax(i) == 0
                     EIeff(i) = NaN;
                 else
-                    x1 = obj.determineAppliedLoadFromM1(M1(i));
+                    x1 = obj.determineAppliedLoadFromM1(P1(i),M1(i));
                     
                     % Use fsolve to find effective stiffness
                     options.TolFun = 1.0e-12*vmax(i);

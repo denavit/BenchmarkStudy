@@ -371,7 +371,7 @@ if {$analysisType == "LimitPoint_Proportional"} {
 
     set ok 0
     set iStep 0
-    set loadStep [expr double($P)/$numStepsLateral]
+    set loadStep [expr -1*double($P)/$numStepsLateral]
     integrator LoadControl $loadStep
     test NormUnbalance $baseForceTolerance 30 $testOutputFlag
     analysis Static
