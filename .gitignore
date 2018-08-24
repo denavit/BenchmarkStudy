@@ -1,2 +1,6 @@
 results
+*.m~
+*.asv
 *.mat
+*.fig
+*.out
