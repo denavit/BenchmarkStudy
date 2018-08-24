@@ -53,18 +53,17 @@ classdef BenchmarkAnalysis2d_Elastic_Sidesway_Uninhibited < BenchmarkAnalysis2d_
             k = sqrt(1+obj.gamma)*nomographK_sidesway_uninhibited(obj.Gtop,obj.Gbot);
         end
         function k = compute_K(obj)
-            k_guess = obj.storyBasedK;
-            options = struct;
-            options.Display = 'off';
-            [alphacr,~,exitflag] = fsolve(@(alpha)errorK(obj,alpha),...
-                pi/k_guess/obj.L,options);
+            options = optimoptions('fsolve',...
+                'Display','off',...
+                'TolFun',min([abs(errorK(obj,obj.storyBasedK))/1e12 0.01]));
+            [k,~,exitflag] = fsolve(@(k)errorK(obj,k),obj.storyBasedK,options);
             if exitflag <= 0
-                k_guess = 1;
-                [alphacr,~,exitflag] = fsolve(@(alpha)errorK(obj,alpha),...
-                    pi/k_guess/obj.L,options);
+                options = optimoptions('fsolve',...
+                    'Display','off',...
+                    'TolFun',min([abs(errorK(obj,1))/1e12 0.01]));
+                [k,~,exitflag] = fsolve(@(k)errorK(obj,k),1,options);
                 assert(exitflag >= 1,'Could not deterine K');
             end
-            k = pi/alphacr/obj.L;
         end
         function x = endMomentRatio(obj,P)
             m1 = obj.firstOrderMoment(P,1,0);
@@ -1134,7 +1133,8 @@ function x = errorAppliedMoment(obj,P,H,M2,notionalLoadObject)
     x    = obj.maxSecondOrderMoment(P,Hwnl) - M2;
 end
 
-function x = errorK(obj,alpha)
+function x = errorK(obj,K)
+alpha = pi/(K*obj.L);
 if obj.kqtop == 0
     if obj.kqbot == 0
         error('Structure is unstable for kqtop = %g, kqbot = %g',obj.kqtop,obj.kqbot);
