@@ -53,9 +53,14 @@ classdef BenchmarkAnalysis2d_Elastic_Sidesway_Uninhibited < BenchmarkAnalysis2d_
             k = sqrt(1+obj.gamma)*nomographK_sidesway_uninhibited(obj.Gtop,obj.Gbot);
         end
         function k = compute_K(obj)
+            err0 = abs(errorK(obj,obj.storyBasedK));
+            if err0 < 1e-12
+                k = obj.storyBasedK;
+                return
+            end
             options = optimoptions('fsolve',...
                 'Display','off',...
-                'TolFun',min([abs(errorK(obj,obj.storyBasedK))/1e12 0.01]));
+                'TolFun',min([err0/1e12 0.01]));
             [k,~,exitflag] = fsolve(@(k)errorK(obj,k),obj.storyBasedK,options);
             if exitflag <= 0
                 options = optimoptions('fsolve',...
