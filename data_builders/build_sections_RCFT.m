@@ -1,4 +1,4 @@
-function sections = build_section_RCFT()
+function sections = build_sections_RCFT()
 
 iSection = 1;
 fc = [4 8 16];
@@ -15,6 +15,7 @@ D = chosenSections(:,1);
 B = chosenSections(:,2);
 t = 0.93*chosenSections(:,3);
 
+sections(length(D)*length(fc)) = struct;
 for i = 1:length(D)
     for j = 1:length(fc)
         sections(iSection).axis = 'strong';

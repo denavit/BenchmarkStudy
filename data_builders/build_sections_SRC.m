@@ -16,6 +16,7 @@ s = 12;
 fc = [4 8 16];
 cover = 1.5;
 
+sections(length(shapeNames)*length(reinfConfig)*length(fc)) = struct;
 for j = 1:length(shapeNames)
     for k = 1:length(reinfConfig)
         for l = 1:length(fc)

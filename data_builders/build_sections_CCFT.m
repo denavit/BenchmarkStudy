@@ -14,6 +14,7 @@ chosenSections = [
 D = chosenSections(:,1);
 t = 0.93*chosenSections(:,2);
 
+sections(length(D)*length(fc)) = struct;
 for i = 1:length(D)
     for j = 1:length(fc)
         sections(iSection).axis = 'strong';
