@@ -223,6 +223,14 @@ classdef BenchmarkAnalysis2d_OpenSees < OpenSeesAnalysis
                                 fprintf(fid,'set maxAnalysisTime %i \n',240);
                                 fprintf(fid,'set baseForceTolerance %g \n',obj.base_tolerance_force);
                                 fprintf(fid,'set baseDisplacementTolerance %g \n',1e-8*obj.L);
+                            case 3
+                                fprintf(fid,'set numStepsGravity %i\n',obj.numStepsGravity);
+                                fprintf(fid,'set coarseDispStepSize %g \n',obj.L/100000);
+                                fprintf(fid,'set fineDispStepSize %g \n',obj.L/1000000);
+                                fprintf(fid,'set maxDisp %g \n',0.15*obj.L);
+                                fprintf(fid,'set maxAnalysisTime %i \n',600);
+                                fprintf(fid,'set baseForceTolerance %g \n',10*obj.base_tolerance_force);
+                                fprintf(fid,'set baseDisplacementTolerance %g \n',1e-7*obj.L);
                             otherwise
                                 error('Undefined for tryNumber: %i',tryNumber)
                         end       
@@ -274,7 +282,7 @@ classdef BenchmarkAnalysis2d_OpenSees < OpenSeesAnalysis
                         
                         switch tryNumber
                             case 1                        
-                                fprintf(fid,'set coarseDispStepSize %g \n',obj.L/20000*direction);
+                                fprintf(fid,'set coarseDispStepSize %g \n',obj.L/200000*direction);
                                 fprintf(fid,'set fineDispStepSize %g \n',obj.L/200000*direction);
                                 fprintf(fid,'set maxDisp %g \n',0.05*obj.L);
                                 fprintf(fid,'set maxAnalysisTime %i \n',240);
@@ -282,19 +290,19 @@ classdef BenchmarkAnalysis2d_OpenSees < OpenSeesAnalysis
                                 fprintf(fid,'set baseDisplacementTolerance %g \n',1e-8*obj.L);
                                 
                             case 2
-                                fprintf(fid,'set coarseDispStepSize %g \n',obj.L/200000*direction);
+                                fprintf(fid,'set coarseDispStepSize %g \n',obj.L/2000000*direction);
                                 fprintf(fid,'set fineDispStepSize %g \n',obj.L/2000000*direction);
                                 fprintf(fid,'set maxDisp %g \n',0.05*obj.L);
                                 fprintf(fid,'set maxAnalysisTime %i \n',600);
-                                fprintf(fid,'set baseForceTolerance %g \n',obj.base_tolerance_force);
+                                fprintf(fid,'set baseForceTolerance %g \n',0.1*obj.base_tolerance_force);
                                 fprintf(fid,'set baseDisplacementTolerance %g \n',1e-8*obj.L);
 
                             case 3
-                                fprintf(fid,'set coarseDispStepSize %g \n',obj.L/200000*direction);
-                                fprintf(fid,'set fineDispStepSize %g \n',obj.L/2000000*direction);
+                                fprintf(fid,'set coarseDispStepSize %g \n',obj.L/20000000*direction);
+                                fprintf(fid,'set fineDispStepSize %g \n',obj.L/20000000*direction);
                                 fprintf(fid,'set maxDisp %g \n',0.05*obj.L);
                                 fprintf(fid,'set maxAnalysisTime %i \n',600);
-                                fprintf(fid,'set baseForceTolerance %g \n',100*obj.base_tolerance_force);
+                                fprintf(fid,'set baseForceTolerance %g \n',0.01*obj.base_tolerance_force);
                                 fprintf(fid,'set baseDisplacementTolerance %g \n',1e-6*obj.L);
                                                                 
                             otherwise
@@ -327,6 +335,15 @@ classdef BenchmarkAnalysis2d_OpenSees < OpenSeesAnalysis
                                 fprintf(fid,'set baseForceTolerance %g \n',obj.base_tolerance_force);
                                 fprintf(fid,'set baseDisplacementTolerance %g \n',1e-8*obj.L);
 
+                            case 3
+                                fprintf(fid,'set numStepsGravity %i\n',obj.numStepsGravity);
+                                fprintf(fid,'set coarseDispStepSize %g \n',obj.L/10000000);
+                                fprintf(fid,'set fineDispStepSize %g \n',obj.L/10000000);
+                                fprintf(fid,'set maxDisp %g \n',0.10*obj.L);
+                                fprintf(fid,'set maxAnalysisTime %i \n',6000);
+                                fprintf(fid,'set baseForceTolerance %g \n',10*obj.base_tolerance_force);
+                                fprintf(fid,'set baseDisplacementTolerance %g \n',10*1e-8*obj.L);                                
+                                
                             otherwise
                                 error('Undefined for tryNumber: %i',tryNumber)
                         end
@@ -713,13 +730,18 @@ classdef BenchmarkAnalysis2d_OpenSees < OpenSeesAnalysis
                 case 1
                     deformationStep_Axial = -0.00005;
                     maxNumSteps_Axial = 1000;
-                    deformationStep_Bending = 0.00001/obj.section.depth(obj.axis);
-                    maxNumSteps_Bending = 30000;
+                    deformationStep_Bending = 0.0001/obj.section.depth(obj.axis);
+                    maxNumSteps_Bending = 3000;
                 case 2
                     deformationStep_Axial = -0.00005;
                     maxNumSteps_Axial = 1000;
-                    deformationStep_Bending = 0.000001/obj.section.depth(obj.axis);
+                    deformationStep_Bending = 0.00001/obj.section.depth(obj.axis);
                     maxNumSteps_Bending = 30000;
+                case 3
+                    deformationStep_Axial = -0.00005;
+                    maxNumSteps_Axial = 1000;
+                    deformationStep_Bending = 0.000001/obj.section.depth(obj.axis);
+                    maxNumSteps_Bending = 300000;
                 otherwise
                     error('Undefined for tryNumber: %i',tryNumber)
             end
