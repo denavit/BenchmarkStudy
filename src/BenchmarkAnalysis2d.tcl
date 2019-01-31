@@ -523,17 +523,19 @@ if {$analysisType == "LimitPoint_Proportional"} {
     pattern Plain 2 Linear {
     	if {$frameType == "Sidesway_Uninhibited"} {
 			load $numNodes 1.0 0.0 0.0  
+            set controlledNode $numNodes
+            set controlledDOF  1
+            set dispStepSize [expr $d/double($numStepsLateral)]
 		} elseif {$frameType == "Sidesway_Inhibited"} {
-	        puts "TargetDisplacement_NonProportional not yet implemented for Sidesway_Inhibited"      	
+            puts "TargetDisplacement_NonProportional not yet implemented for Sidesway_Inhibited"
+            exit -1
 		} else {
 		    puts "frameType: $frameType not recgonized"
 		}    
     }
     set ok 0
     set iStep 0
-	set controlledNode $numNodes
-    set controlledDOF  1
-    set dispStepSize [expr $d/double($numStepsLateral)]
+	
     integrator DisplacementControl $controlledNode $controlledDOF $dispStepSize
     test NormUnbalance $baseForceTolerance 30 $testOutputFlag
     analysis Static
