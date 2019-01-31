@@ -7,6 +7,11 @@ classdef BenchmarkStudy < handle
         results_tags
         scratch_path = ''        
         numPoints = 9;
+        
+        fiber_section_definition_options_name = cell(0,1);
+        fiber_section_definition_options_S = cell(0,1);
+        analysis_options_name = cell(0,1);
+        analysis_options_S = cell(0,1);
     end
     
     methods 
@@ -121,6 +126,53 @@ classdef BenchmarkStudy < handle
             end
         end
         
+        % 
+        function set_fiber_section_definition_options(obj,name,S)
+            match = strcmp(obj.fiber_section_definition_options_name,name);
+            if sum(match) == 0
+                obj.fiber_section_definition_options_name = vertcat(...
+                    obj.fiber_section_definition_options_name,name);
+                obj.fiber_section_definition_options_S = vertcat(...
+                    obj.fiber_section_definition_options_S,S);
+            elseif sum(match) == 1
+                obj.fiber_section_definition_options_S{match == 1} = S;
+            else
+                error('name exists in study twice or more')
+            end
+            obj.save;
+        end
+        function S = get_fiber_section_definition_options(obj,name)
+            match = strcmp(obj.fiber_section_definition_options_name,name);
+            if sum(match) == 0
+                error('fiber section definition options "%s" does not exist',name);
+            elseif sum(match) == 1
+                S = obj.fiber_section_definition_options_S{match == 1};
+            else
+                error('name exists in study twice or more')
+            end
+        end
+        function set_analysis_options(obj,name,S)
+            match = strcmp(obj.analysis_options_name,name);
+            if sum(match) == 0
+                obj.analysis_options_name = vertcat(obj.analysis_options_name,name);
+                obj.analysis_options_S = vertcat(obj.analysis_options_S,S);
+            elseif sum(match) == 1
+                obj.analysis_options_S{match == 1} = S;
+            else
+                error('name exists in study twice or more')
+            end
+            obj.save;            
+        end
+        function S = get_analysis_options(obj,name)
+            match = strcmp(obj.analysis_options_name,name);
+            if sum(match) == 0
+                error('analysis options "%s" does not exist',name);
+            elseif sum(match) == 1
+                S = obj.analysis_options_S{match == 1};
+            else
+                error('name exists in study twice or more')
+            end            
+        end
     end
 end
 
