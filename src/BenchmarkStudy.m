@@ -55,7 +55,7 @@ classdef BenchmarkStudy < handle
         end        
         
         %% Functions that modify the study
-        function path = addResultsFile(obj,tag)
+        function path = add_results_file(obj,tag)
             % Check tag
             assert(isempty(obj.check_results_tag(tag)),...
                 'tag should be unique');
@@ -73,7 +73,7 @@ classdef BenchmarkStudy < handle
             % Create file path
             path = fullfile(obj.study_path,filename);
         end
-        function removeResultsFile(obj,tag)            
+        function remove_results_file(obj,tag)            
             % Check tag
             ind = obj.check_results_tag(tag);
             

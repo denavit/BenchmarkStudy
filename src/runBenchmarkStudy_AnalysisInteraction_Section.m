@@ -79,9 +79,9 @@ close(hwait);
 
 %% Save Data
 if ~newStudy
-    study.removeResultsFile(tag);
+    study.remove_results_file(tag);
 end
-path = study.addResultsFile(tag);
+path = study.add_results_file(tag);
 save(path,'results','-v7.3');
 fprintf('  results saved\n');
 
