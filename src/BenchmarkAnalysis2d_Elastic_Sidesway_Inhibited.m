@@ -171,7 +171,13 @@ classdef BenchmarkAnalysis2d_Elastic_Sidesway_Inhibited < BenchmarkAnalysis2d_El
                 @(M)obj.maxSecondOrderMoment(P,M)-M2,...
                 0,options);
             if exitflag <= 0
-                error('fsolve could not find solution');
+                
+                [M1,~,exitflag] =  fsolve(...
+                    @(M)obj.maxSecondOrderMoment(P,M)-M2,...
+                    0.5*M2,options);
+                if exitflag <= 0
+                    error('fsolve could not find solution');
+                end
             end
         end
         function [P,M2] = determinePeakLoad(obj,designM,designP,M1,Py,tauType)
