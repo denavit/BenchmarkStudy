@@ -213,7 +213,7 @@ classdef BenchmarkAnalysis2d_Elastic_Sidesway_Inhibited < BenchmarkAnalysis2d_El
                 if exitflag <= 0
                     error('fsolve could not find solution');
                 end
-                tau = AISC_tau(-P/Py,tauType);
+                tau = AISC_tau(P/Py,tauType);
                 obj2 = obj.get_copy_with_reduced_stiffness(tau);
                 M2 = obj2.maxSecondOrderMoment(P,M1);
             end
@@ -377,7 +377,7 @@ classdef BenchmarkAnalysis2d_Elastic_Sidesway_Inhibited < BenchmarkAnalysis2d_El
                 tau = AISC_tau(P/Py,tauType);
                 obj2 = obj.get_copy_with_reduced_stiffness(tau*columnStiffnessReduction);
                 
-                if P > obj2.eulerLoad
+                if -P >= obj2.eulerLoad
                     continue
                 end
                 
@@ -453,7 +453,7 @@ end
 % end
 
 function x = errorPeakLoad(obj,designM,designP,P,M1,Py,tauType)
-tau = AISC_tau(-P/Py,tauType);
+tau = AISC_tau(P/Py,tauType);
 obj2 = obj.get_copy_with_reduced_stiffness(tau);
 if P < -obj2.eulerLoad
     x = NaN;
