@@ -181,7 +181,7 @@ classdef BenchmarkAnalysis2d_Elastic_Sidesway_Inhibited < BenchmarkAnalysis2d_El
             end
         end
         function [P,M2] = determinePeakLoad(obj,designM,designP,M1,Py,tauType)
-            if M1 == 0
+            if M1 == 0 & ~obj.includeInitialGeometricImperfections
                 % No lateral loads
                 id = interactionDiagram2d(designM,designP);
                 Pcr_design = id.findYgivenX(0,'negative');
