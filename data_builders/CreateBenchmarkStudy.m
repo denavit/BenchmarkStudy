@@ -25,6 +25,8 @@ if build_data
             data = build_data_from_sections(build_sections_SRC('strong'));
         case 'SRCw'
             data = build_data_from_sections(build_sections_SRC('weak'));
+        case 'RC'
+            data = build_data_RC();
         otherwise
             error('Unknown study name: %s',study_name)
     end

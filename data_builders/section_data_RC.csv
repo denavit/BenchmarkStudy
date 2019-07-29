@@ -1,0 +1,27 @@
+shape,B,cover,longitudinal_config,longitudinal_bar_size,transverse_reinf_type,transverse_bar_size,s,transverse_config
+square,20,1.5,2x-2y,#9,ties,#3,18,A
+square,20,1.5,3x-3y,#8,ties,#3,16,B
+square,20,1.5,3x-3y,#9,ties,#3,18,B
+square,20,1.5,3x-3y,#10,ties,#3,18,B
+square,20,1.5,3x-3y,#11,ties,#4,20,B
+square,20,1.5,4x-4y,#10,ties,#3,18,C
+square,20,1.5,3x-2y,#8,ties,#3,16,D
+square,20,1.5,4x-2y,#9,ties,#3,18,E
+square,20,1.5,4x-2y,#11,ties,#4,20,E
+square,20,1.5,5x-2y,#11,ties,#3,18,F
+square,20,1.5,2x-3y,#8,ties,#3,16,D
+square,20,1.5,2x-4y,#9,ties,#3,18,E
+square,20,1.5,2x-4y,#11,ties,#4,20,E
+square,20,1.5,2x-5y,#11,ties,#3,18,F
+circle,20,1.5,8 bars,#6,ties,#3,12,G
+circle,20,1.5,8 bars,#7,ties,#3,14,G
+circle,20,1.5,8 bars,#8,ties,#3,16,G
+circle,20,1.5,8 bars,#9,ties,#3,18,G
+circle,20,1.5,8 bars,#10,ties,#4,20,G
+circle,20,1.5,8 bars,#11,ties,#4,20,G
+circle,20,1.5,8 bars,#6,spiral,calc,calc,H
+circle,20,1.5,8 bars,#7,spiral,calc,calc,H
+circle,20,1.5,8 bars,#8,spiral,calc,calc,H
+circle,20,1.5,8 bars,#9,spiral,calc,calc,H
+circle,20,1.5,8 bars,#10,spiral,calc,calc,H
+circle,20,1.5,8 bars,#11,spiral,calc,calc,H
