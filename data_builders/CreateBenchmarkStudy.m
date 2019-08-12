@@ -54,6 +54,8 @@ if build_options
             fiber_section_definition_options.SteelMaterialType = 'ElasticSmallStiffness';
             fiber_section_definition_options.ConcreteMaterialType = 'ProposedForDesign';
             fiber_section_definition_options.ReinforcementMaterialType = 'ElasticSmallStiffness';
+        case {'Maleck_SA','Maleck_WA'}
+            fiber_section_definition_options.SteelMaterialType = 'ElasticSmallStiffness';
         otherwise
             error('Unknown study name: %s',study_name)
     end
