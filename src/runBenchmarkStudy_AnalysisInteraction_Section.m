@@ -38,7 +38,15 @@ for iData = selectedData
     waitbar(iData/numData,hwait,str);
 
     % Get cross section definition
-    sectionDef = FiberSectionDefinition(data(iData).section,data(iData).axis,1,1,fiberSectionDefinitionOptions);
+    if length(fiberSectionDefinitionOptions) == 1
+        fsDefOpts = fiberSectionDefinitionOptions;
+    elseif length(fiberSectionDefinitionOptions) == numData
+        fsDefOpts = fiberSectionDefinitionOptions(iData);
+    else
+        error('Bad size for fiberSectionDefinitionOptions')
+    end
+    
+    sectionDef = FiberSectionDefinition(data(iData).section,data(iData).axis,1,1,fsDefOpts);
     
     % Create Analysis Object
     ba = BenchmarkAnalysis2d_OpenSees(data(iData),sectionDef,analysisOptions);
