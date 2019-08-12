@@ -209,7 +209,7 @@ classdef BenchmarkAnalysis2d_Elastic_Sidesway_Inhibited < BenchmarkAnalysis2d_El
                 end
                 
             else 
-                Pguess = -0.8*min(Py,obj.eulerLoad);
+                Pguess = -0.8*min([Py obj.eulerLoad max(-designP)]);
                 options.TolFun = 1.0e-12;
                 options.TolX = abs(1.0e-8*Pguess);
                 options.Display = 'off';
