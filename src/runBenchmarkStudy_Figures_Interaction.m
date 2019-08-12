@@ -1,5 +1,11 @@
 function runBenchmarkStudy_Figures_Interaction(study,tags,names,saveFigures)
 
+selectedData = [];
+if iscell(study)
+    selectedData = study{2};
+    study = study{1};
+end
+
 if ischar(tags)
     tags = {tags};
 end
@@ -17,6 +23,9 @@ end
 % Load Sections
 load(study.path_of_data);
 numData = length(data);
+if isempty(selectedData)
+    selectedData = 1:numData;
+end
 
 % Load Results
 numResults = length(tags);
@@ -27,14 +36,13 @@ for i = 1:numResults
     clear results
 end
 
-myColors = lines(numData);
+myColors = lines(numResults);
 
 
 %% Interaction Diagrams
 fs = figureStyle('Display');
 
 h1 = NaN;
-selectedData = 1:numData;
 for iData = selectedData
     if ishandle(h1)
         close(h1);
@@ -58,12 +66,17 @@ for iData = selectedData
     
     % Lables
     section_name = strrep(data(iData).section_name,'_','\_');
-    frame_name   = strrep(data(iData).frame_name,'_','\_');
+    if isfield(data(iData),'frame_name')
+        frame_name   = strrep(data(iData).frame_name,'_','\_');
+    else
+        frame_name = '';
+    end
     
-    extraInfo = sprintf('Case %i - Section %i: %s - Frame %i: %s',...
-        iData,...
-        data(iData).section_id,section_name,...
-        data(iData).frame_id,frame_name);
+    extraInfo = sprintf('Case %i',iData');
+    %extraInfo = sprintf('Case %i - Section %i: %s - Frame %i: %s',...
+    %    iData,...
+    %    data(iData).section_id,section_name,...
+    %    data(iData).frame_id,frame_name);
     xlabel({'Bending Moment (M)',extraInfo})
     ylabel('Axial Compression (P)')
     legend(legendHandles,legendNames,'Location','NE');
@@ -119,6 +132,13 @@ switch results.study_type
             plot(results.M2,-results.P2,'--','LineWidth',2,'Color',color);
             plot(results.M2e,-results.P2e,'-.','LineWidth',2,'Color',color);        
         
+    case 'ACI Interaction'
+        h = plot(results.M1,-results.P1,'-','LineWidth',2,'Color',color);
+            plot(results.M2,-results.P2,'--','LineWidth',2,'Color',color);
+            
+    case 'ACI Interaction (Section)'
+        h = plot(results.M1,-results.P1,'-','LineWidth',2,'Color',color);
+            
     otherwise
         error('Unknown study type: %s',results.study_type)
 end
@@ -128,6 +148,12 @@ end
 
 function marker_type = get_marker_type(limit_type)
 
+if isempty(limit_type)
+    fprintf('Unknown limit type: empty\n');
+    marker_type = 'o';
+	return
+end
+    
 switch limit_type
     case 'Stability Limit (Reached)'
         marker_type = 's';
@@ -141,7 +167,7 @@ switch limit_type
         marker_type = '<';
     otherwise
         fprintf('Unknown limit type: %s\n',limit_type);
-        marker_type = 'o';        
+        marker_type = 'o';
 end
 
 end
