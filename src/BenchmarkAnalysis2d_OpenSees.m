@@ -51,6 +51,8 @@ classdef BenchmarkAnalysis2d_OpenSees < OpenSeesAnalysis
             obj.frame_type = data.frame_type;
             
             switch obj.frame_type
+                case 'Section'
+                    assert(obj.L == 0);
                 case 'Sidesway_Inhibited'
                     obj.beta   = data.beta;
                     obj.delta0 = data.delta0;
@@ -549,6 +551,9 @@ classdef BenchmarkAnalysis2d_OpenSees < OpenSeesAnalysis
             
             M1 = nan(size(P1));
             for i = 1:length(M1)
+                if P1(i) > 0
+                    error('Positive P')
+                end
                 M1(i) = BA_Elastic.maxFirstOrderMoment(P1(i),x(i));
             end
             
@@ -751,11 +756,11 @@ classdef BenchmarkAnalysis2d_OpenSees < OpenSeesAnalysis
                     siResults = si.runSectionToPeak2d('AxialOnly',...
                         deformationStep_Axial,maxNumSteps_Axial);
                 case 'LimitPoint_Proportional'
-                    siResults = si.runSectionToPeak2d('Proportional',e,...
-                        deformationStep_Axial,maxNumSteps_Axial);
+                    siResults = si.runSectionToPeak2d('Proportional',...
+                        deformationStep_Axial,maxNumSteps_Axial,e);
                 case 'LimitPoint_Proportional2'
-                    siResults = si.runSectionToPeak2d('Proportional2',e,...
-                        deformationStep_Axial,maxNumSteps_Axial);
+                    siResults = si.runSectionToPeak2d('Proportional2',...
+                        deformationStep_Bending,maxNumSteps_Bending,e);
                 case 'LimitPoint_NonProportional'
                     siResults = si.runSectionToPeak2d('NonProportional',...
                         deformationStep_Bending,maxNumSteps_Bending,P,10);
