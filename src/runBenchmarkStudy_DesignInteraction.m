@@ -1,4 +1,4 @@
-function runBenchmarkStudy_DesignInteraction(study,tag,tag_Analysis,designAnalysisType,elasticStiffnessType,designStrengthType)
+function runBenchmarkStudy_DesignInteraction(study,tag,tag_Analysis,option)
 
 %% Basic Information
 angles = linspace(0,pi/2,300)';
@@ -54,30 +54,8 @@ for iData = selectedData
     Py_tau = data(iData).section.Pnco;
 
     %%%%%%%% Construct Interaction Diagrams %%%%%%%%
-    switch designAnalysisType
-        case 'DirectAnalysis_Proposed'
-            if data(iData).section.hasConcrete
-                tauType            = 'ProposedComposite';
-            else
-                tauType            = 'AISC';
-            end
-            notionalLoadObject          = notional_load(0.000,0.002,1.7);
-            effectiveLengthFactorType   = 'one';
-            columnStiffnessReduction    = 0.8;
-            beamStiffnessReduction      = 0.8; 
-            peakMomentRatio             = [];
-            neglectInitialImperf        = true;
-            
-        case 'Scratch'
-            tauType                     = 'none';
-            notionalLoadObject          = notional_load(0.000,0.002,1.7);
-            effectiveLengthFactorType   = 'one';
-            columnStiffnessReduction    = 0.8;
-            beamStiffnessReduction      = 0.8;
-            peakMomentRatio             = [];
-            neglectInitialImperf        = true;
-            
-        case 'DirectAnalysis_AISC2010'
+    switch option
+        case 'AISC 2016 (DA)'
             notionalLoadObject          = notional_load(0.000,0.002,1.7);
             effectiveLengthFactorType   = 'one';
             columnStiffnessReduction    = 0.8;
@@ -85,17 +63,10 @@ for iData = selectedData
             tauType                     = 'AISC';
             peakMomentRatio             = [];
             neglectInitialImperf        = true;
+            elasticStiffnessType        = 'ColumnStrength';
+            designStrengthType          = 'AISC';
             
-        case 'DirectAnalysis_AISC2010_OptionB'
-            notionalLoadObject          = notional_load(0.001,0.002,1.7);
-            effectiveLengthFactorType   = 'one';
-            columnStiffnessReduction    = 0.8;
-            beamStiffnessReduction      = 0.8;
-            tauType                     = 'none';
-            peakMomentRatio             = [];
-            neglectInitialImperf        = true;
-            
-        case 'DirectAnalysis_DMMI'
+        case 'AISC 2016 (DMMI)'
             notionalLoadObject          = notional_load(0.000,0.000,Inf);
             effectiveLengthFactorType   = 'zero';
             columnStiffnessReduction    = 0.8;
@@ -103,26 +74,21 @@ for iData = selectedData
             tauType                     = 'AISC';
             peakMomentRatio             = [];
             neglectInitialImperf        = false;
+            elasticStiffnessType        = 'ColumnStrength';
+            designStrengthType          = 'AISC';
             
-        case 'EffectiveLength_AISC2010'
-            notionalLoadObject          = notional_load(0.000,0.002,Inf);
-            effectiveLengthFactorType   = 'k';
+        case 'AISC 2016 (EL)'
+            notionalLoadObject          = notional_load(0.000,0.002,1.7);
+            effectiveLengthFactorType   = 'StoryBasedK';
             columnStiffnessReduction    = 1.0;
-            beamStiffnessReduction      = 1.0;
+            beamStiffnessReduction      = 1.0; 
             tauType                     = 'none';
             peakMomentRatio             = [];
             neglectInitialImperf        = true;
+            elasticStiffnessType        = 'ColumnStrength';
+            designStrengthType          = 'AISC';            
             
-        case 'EffectiveLength_Proposed'
-            notionalLoadObject          = notional_load(0.000,0.002,Inf);
-            effectiveLengthFactorType   = 'k';
-            columnStiffnessReduction    = 0.8;
-            beamStiffnessReduction      = 1.0;
-            tauType                     = 'none';
-            peakMomentRatio             = [];
-            neglectInitialImperf        = true;
-            
-        case 'ACI2011'
+        case 'ACI 2011'
             notionalLoadObject          = notional_load(0.000,0.000,Inf);
             effectiveLengthFactorType   = 'zero';
             columnStiffnessReduction    = 1.0;
@@ -130,8 +96,10 @@ for iData = selectedData
             tauType                     = 'none';
             peakMomentRatio             = 1.4;
             neglectInitialImperf        = true;
+            elasticStiffnessType        = 'ACI';
+            designStrengthType          = 'ACI';
             
-        case 'ACI2011_No_Moment_Ratio_Limit'
+        case 'ACI 2011 (No Moment Ratio Limit)'
             notionalLoadObject          = notional_load(0.000,0.000,Inf);
             effectiveLengthFactorType   = 'zero';
             columnStiffnessReduction    = 1.0;
@@ -139,8 +107,10 @@ for iData = selectedData
             tauType                     = 'none';
             peakMomentRatio             = [];                
             neglectInitialImperf        = true;
+            elasticStiffnessType        = 'ACI';
+            designStrengthType          = 'ACI';
             
-        case 'DirectAnalysis_Maleck'
+        case 'Maleck (DA)'
             switch data(iData).axis
                 case 'strong'
                     stiffnessReduction = 0.9;
@@ -156,8 +126,10 @@ for iData = selectedData
             tauType                     = 'maleck';
             peakMomentRatio             = [];
             neglectInitialImperf        = true;
+            elasticStiffnessType        = 'ColumnStrength';
+            designStrengthType          = 'AISC';
             
-        case 'EffectiveLength_Maleck'
+        case 'Maleck (EL)'
             notionalLoadObject          = notional_load(0.000,0.000,Inf);
             effectiveLengthFactorType   = 'StoryBasedK';
             columnStiffnessReduction    = 1.0;
@@ -165,6 +137,19 @@ for iData = selectedData
             tauType                     = 'none';
             peakMomentRatio             = [];
             neglectInitialImperf        = true;
+            elasticStiffnessType        = 'ColumnStrength';
+            designStrengthType          = 'AISC';
+          
+        case 'Scratch'
+            tauType                     = 'none';
+            notionalLoadObject          = notional_load(0.000,0.002,1.7);
+            effectiveLengthFactorType   = 'one';
+            columnStiffnessReduction    = 0.8;
+            beamStiffnessReduction      = 0.8;
+            peakMomentRatio             = [];
+            neglectInitialImperf        = true;
+            elasticStiffnessType        = 'ColumnStrength';
+            designStrengthType          = 'AISC';            
             
         otherwise
             error('Unknown Design Type')
@@ -177,7 +162,10 @@ for iData = selectedData
         data(iData).Delta0 = 0;
     end
     BA_Elastic = BenchmarkAnalysis2d_Elastic(data(iData));    
-
+    if neglectInitialImperf 
+        BA_Elastic.includeInitialGeometricImperfections = false;
+    end
+    
     % Store Interaction Results
     [P1,M1,P2,M2] = BA_Elastic.designInteraction(...
         data(iData).section,data(iData).axis,designStrengthType,numPoints,...
