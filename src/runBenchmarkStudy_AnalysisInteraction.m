@@ -2,8 +2,18 @@ function runBenchmarkStudy_AnalysisInteraction(study,tag,fiberSectionDefinitionO
 
 %% Load Data
 % Load Sections
-load(study.path_of_data);
-numData = length(data);
+if iscell(study)
+    selectedData = study{2};
+    study = study{1};
+    load(study.path_of_data);
+    numData = length(data);
+    newStudy = false;
+else
+    load(study.path_of_data);
+    numData = length(data);
+    selectedData = 1:numData;
+    newStudy = true;    
+end
 
 % Number of Points in Interaction
 numPoints = study.numPoints;
@@ -12,17 +22,7 @@ numPoints = study.numPoints;
 analysisOptions.scratchPath = study.scratch_path;
 
 %% Initilize Results Structure
-if iscell(tag)
-    newStudy = isempty(study.check_results_tag(tag{1}));
-    selectedData = tag{2};
-    tag = tag{1};
-else
-    newStudy = true;
-    selectedData = 1:numData;
-    assert(isempty(study.check_results_tag(tag)),'tag is not unique')    
-end
-
-if newStudy
+if isempty(study.check_results_tag(tag))
     results(numData) = struct;
 else
     load(study.path_of_results(tag));
@@ -34,7 +34,7 @@ study_name = strrep(study.study_name,'_','\_');
 studystr = sprintf('Analysis Interaction Study (%s)',study_name);
 hwait = waitbar(0,studystr);
 for iData = selectedData
-    str = {studystr,sprintf('Case %i of %i',iData,numData)};
+    str = {'',studystr,sprintf('Case %i of %i',iData,numData)};
     waitbar(iData/numData,hwait,str);
     
     % Get cross section definition
