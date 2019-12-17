@@ -68,6 +68,11 @@ for iData = selectedData
             neglectInitialImperf        = true;
             elasticStiffnessType        = 'ColumnStrength';
             designStrengthType          = 'AISC';
+            % Modifications for composite
+            if data(iData).section.hasConcrete
+                tauType = 'Composite';
+                data(iData).section.option_EI = 'AISC2016';
+            end
             
         case 'AISC 2016 (DMMI)'
             notionalLoadObject          = notional_load(0.000,0.000,Inf);
@@ -79,6 +84,11 @@ for iData = selectedData
             neglectInitialImperf        = false;
             elasticStiffnessType        = 'ColumnStrength';
             designStrengthType          = 'AISC';
+            % Modifications for composite
+            if data(iData).section.hasConcrete
+                tauType = 'Composite';
+                data(iData).section.option_EI = 'AISC2016';
+            end
             
         case 'AISC 2016 (EL)'
             notionalLoadObject          = notional_load(0.000,0.002,1.7);
@@ -89,7 +99,12 @@ for iData = selectedData
             peakMomentRatio             = [];
             neglectInitialImperf        = true;
             elasticStiffnessType        = 'ColumnStrength';
-            designStrengthType          = 'AISC';            
+            designStrengthType          = 'AISC';
+            % Modifications for composite
+            if data(iData).section.hasConcrete
+                tauType = 'Composite';
+                data(iData).section.option_EI = 'AISC2016';
+            end
             
         case 'ACI 2011'
             notionalLoadObject          = notional_load(0.000,0.000,Inf);
