@@ -1,7 +1,6 @@
 function runBenchmarkStudy_AnalysisInteraction(study,tag,fiberSectionDefinitionOptions,analysisOptions)
 
 %% Load Data
-% Load Sections
 if iscell(study)
     selectedData = study{2};
     study = study{1};
@@ -22,10 +21,10 @@ numPoints = study.numPoints;
 analysisOptions.scratchPath = study.scratch_path;
 
 %% Initilize Results Structure
-if isempty(study.check_results_tag(tag))
+if newStudy
     results(numData) = struct;
 else
-    load(study.path_of_results(tag));
+    load(study.path_of_results(tag),'results');
 end
 
 %% Run Study
@@ -33,6 +32,7 @@ fprintf('\nAnalysis Interaction Study (%s)\n',study.study_name);
 study_name = strrep(study.study_name,'_','\_');
 studystr = sprintf('Analysis Interaction Study (%s)',study_name);
 hwait = waitbar(0,studystr);
+set(hwait,'Position',[100 100 275 75])
 for iData = selectedData
     str = {'',studystr,sprintf('Case %i of %i',iData,numData)};
     waitbar(iData/numData,hwait,str);
@@ -42,6 +42,7 @@ for iData = selectedData
     
     % Create Analysis Object
     ba = BenchmarkAnalysis2d_OpenSees(data(iData),sectionDef,analysisOptions);
+    % ba.base_tolerance_force = 0.00001; % Adjust force tolerance if necessary during re-run
 
     % Initilize results
     limit_type  = cell(numPoints,1);
