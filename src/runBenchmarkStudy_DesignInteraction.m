@@ -4,12 +4,21 @@ function runBenchmarkStudy_DesignInteraction(study,tag,tag_Analysis,option)
 angles = linspace(0,pi/2,300)';
 
 %% Load Data
-% Load Sections
-load(study.path_of_data);
-numData = length(data);
+if iscell(study)
+    selectedData = study{2};
+    study = study{1};
+    load(study.path_of_data,'data');
+    numData = length(data);
+    newStudy = false;
+else
+    load(study.path_of_data,'data');
+    numData = length(data);
+    selectedData = 1:numData;
+    newStudy = true;    
+end
 
 % Load Results from Analysis Interaction Study
-load(study.path_of_results(tag_Analysis));
+load(study.path_of_results(tag_Analysis),'results');
 results_FN = results;
 clear results;
 
@@ -17,20 +26,13 @@ clear results;
 numPoints = study.numPoints;
 
 %% Initilize Results Structure
-if iscell(tag)
-    newStudy = isempty(study.check_results_tag(tag{1}));
-    selectedData = tag{2};
-    tag = tag{1};
-else
-    newStudy = true;
-    selectedData = 1:numData;
-    assert(isempty(study.check_results_tag(tag)),'tag is not unique')    
-end
-
 if newStudy
     results(numData) = struct;
+    if ~isempty(study.check_results_tag(tag))
+        error('Results file already exists, will not be able to save results')
+    end
 else
-    load(study.path_of_results(tag));
+    load(study.path_of_results(tag),'results');
 end
 
 %% Run Study
@@ -38,6 +40,7 @@ fprintf('\nDesign Interaction Study (%s)\n',study.study_name);
 study_name = strrep(study.study_name,'_','\_');
 studystr = sprintf('Design Interaction Study (%s)',study_name);
 hwait = waitbar(0,studystr);
+set(hwait,'Position',[100 100 275 75])
 for iData = selectedData
     str = {studystr,sprintf('Case %i of %i',iData,numData)};
     waitbar(iData/numData,hwait,str);
@@ -47,7 +50,7 @@ for iData = selectedData
     % Retreive Fully Nonlinear Results
     P1_FN = results_FN(iData).P1;
     M1_FN = results_FN(iData).M1;
-    if abs(P1_FN(end)) < 1e-6
+    if abs(P1_FN(end)) < 1e-3
         P1_FN(end) = 0;
     end
 
