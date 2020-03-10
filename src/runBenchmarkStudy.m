@@ -53,8 +53,8 @@ switch action
         end
         runBenchmarkStudy_AnalysisInteraction_Section(study,tag,fiber_section_definition_options,analysis_options);
                
-    case 'Figure - Analysis Interaction  (Section)'
-        tag = 'Analysis Interaction  (Section)';
+    case 'Figure - Analysis Interaction (Section)'
+        tag = 'Analysis Interaction (Section)';
         runBenchmarkStudy_Figures_Interaction(study,tag,{'FN'},save_figures);     
         
     case 'Design Interaction'
