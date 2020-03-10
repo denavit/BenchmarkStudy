@@ -208,8 +208,14 @@ classdef BenchmarkAnalysis2d_Elastic_Sidesway_Inhibited < BenchmarkAnalysis2d_El
                     assert(~isempty(M2),'Could not find M2');
                 end
                 
-            else 
-                Pguess = -0.8*min([Py obj.eulerLoad max(-designP)]);
+            else
+                if obj.eulerLoad < min([Py max(-designP)])
+                    tau = AISC_tau(-obj.eulerLoad/Py,tauType);
+                    obj2 = obj.get_copy_with_reduced_stiffness(tau);
+                    Pguess = -0.8*obj2.eulerLoad;
+                else
+                    Pguess = -0.8*min([Py max(-designP)]);
+                end
                 options.TolFun = 1.0e-12;
                 options.TolX = abs(1.0e-8*Pguess);
                 options.Display = 'off';
