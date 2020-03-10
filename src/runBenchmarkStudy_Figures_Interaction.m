@@ -61,22 +61,15 @@ for iData = selectedData
     end
 
     % Set Axis Limtis
-    axis_limits('margin',[0.35 0.20])
-    axis_limits('quadrant',1)
-    
-    % Lables
-    section_name = strrep(data(iData).section_name,'_','\_');
-    if isfield(data(iData),'frame_name')
-        frame_name   = strrep(data(iData).frame_name,'_','\_');
-    else
-        frame_name = '';
+    try
+        axis_limits('margin',[0.35 0.20])
+        axis_limits('quadrant',1)
+    catch
+        % do nothing
     end
     
+    % Labels   
     extraInfo = sprintf('Case %i',iData');
-    %extraInfo = sprintf('Case %i - Section %i: %s - Frame %i: %s',...
-    %    iData,...
-    %    data(iData).section_id,section_name,...
-    %    data(iData).frame_id,frame_name);
     xlabel({'Bending Moment (M)',extraInfo})
     ylabel('Axial Compression (P)')
     legend(legendHandles,legendNames,'Location','NE');
