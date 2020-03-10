@@ -67,7 +67,7 @@ for iData = selectedData
             peakMomentRatio             = [];
             neglectInitialImperf        = true;
             elasticStiffnessType        = 'ColumnStrength';
-            designStrengthType          = 'AISC';
+            designStrengthType          = 'AISC/in_plane';
             % Modifications for composite
             if data(iData).section.hasConcrete
                 tauType = 'Composite';
@@ -97,7 +97,7 @@ for iData = selectedData
             peakMomentRatio             = [];
             neglectInitialImperf        = false;
             elasticStiffnessType        = 'ColumnStrength';
-            designStrengthType          = 'AISC';
+            designStrengthType          = 'AISC/in_plane';
             % Modifications for composite
             if data(iData).section.hasConcrete
                 tauType = 'Composite';
@@ -113,7 +113,7 @@ for iData = selectedData
             peakMomentRatio             = [];
             neglectInitialImperf        = true;
             elasticStiffnessType        = 'ColumnStrength';
-            designStrengthType          = 'AISC';
+            designStrengthType          = 'AISC/in_plane';
             % Modifications for composite
             if data(iData).section.hasConcrete
                 tauType = 'Composite';
