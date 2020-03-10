@@ -17,7 +17,7 @@ t = 0.93*chosenSections(:,3);
 
 for i_shape = 1:length(D)
     for i_Fy = 1:length(Fy)
-        sections(iSection).axis = 'strong';
+        sections(iSection).axis = 'x';
         sections(iSection).section = ...
             RectangularHSS(D(i_shape),B(i_shape),t(i_shape),Fy(i_Fy),'US');
         sections(iSection).section.Fu = Fu(i_Fy);
