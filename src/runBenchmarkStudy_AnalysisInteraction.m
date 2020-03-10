@@ -23,6 +23,9 @@ analysisOptions.scratchPath = study.scratch_path;
 %% Initilize Results Structure
 if newStudy
     results(numData) = struct;
+    if ~isempty(study.check_results_tag(tag))
+        error('Results file already exists, will not be able to save results')
+    end    
 else
     load(study.path_of_results(tag),'results');
 end
