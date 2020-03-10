@@ -21,6 +21,7 @@ for i_Fy = 1:length(Fy)
         sections(iSection).section_type = 'WF';
         sections(iSection).section_name = ...
             sprintf('WF%s-%s-%i',lower(axis(1)),upper(listLetter(i_shape)),Fy(i_Fy));
+        sections(iSection).wf_shape_name = shapeNames{i_shape};
         iSection = iSection+1;
     end
 end
