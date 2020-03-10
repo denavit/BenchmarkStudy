@@ -1173,6 +1173,7 @@ else
             1+obj.gamma).*(obj.kqbot+obj.kqtop).*obj.L).*cos(alpha.*obj.L)+(-1).*alpha.*(obj.EI.* ...
             obj.gamma.*(obj.kqbot+obj.kqtop)+(1+obj.gamma).*(alpha.^2.*obj.EI.^2+(-1).*obj.kqbot.* ...
             obj.kqtop).*obj.L).*sin(alpha.*obj.L);
+        x = x/(obj.kqbot.*obj.kqtop); % Normalize
     end
 end
 end
