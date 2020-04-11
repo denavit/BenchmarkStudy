@@ -75,12 +75,15 @@ for i1 = 1:length(fc)
                                 case 'D'
                                     nLegX = 2;
                                     nLegY = 3;
-                                case 'E'
+                                case {'E','F'}
                                     nLegX = 2;
                                     nLegY = 4;
-                                case 'F'
-                                    nLegX = 2;
-                                    nLegY = 4;
+                                case 'D*'
+                                    nLegX = 3;
+                                    nLegY = 2;
+                                case {'E*','F*'}
+                                    nLegX = 4;
+                                    nLegY = 2;
                                 otherwise
                                     error('Unknown transverse config: %s',section_data.transverse_config{i3});
                             end
@@ -102,7 +105,7 @@ for i1 = 1:length(fc)
                             data(iData).Ab                  = longitudinal_bar_size.area;
                             data(iData).fyt                 = fyt;
                             data(iData).dbt                 = transverse_bar_size.diameter;
-                            data(iData).Abt                 = transverse_bar_size.area; % @todo - number of bars and different directions
+                            data(iData).Abt                 = transverse_bar_size.area; 
                             data(iData).nLegX               = nLegX;
                             data(iData).nLegY               = nLegY;
                             data(iData).s                   = str2double(section_data.s{i3});
