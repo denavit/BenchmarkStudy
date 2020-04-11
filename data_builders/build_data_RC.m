@@ -55,7 +55,7 @@ for i1 = 1:length(fc)
                             num_bars = sscanf(section_data.longitudinal_config{i3},'%ix-%iy');
                             nbx = num_bars(1);
                             nby = num_bars(2);
-                            reinforcement = reinf_rect(Bc,Hc,0,0,nbx,nby,longitudinal_bar_size.area);
+                            reinforcement = reinf_rect(Bc,Hc,0,0,nbx,nby,longitudinal_bar_size.area,longitudinal_bar_size.diameter);
 
                             % Define cross section
                             data(iData).section = RC(fc(i1),fy(i2),conc_cross_section,reinforcement,'US');
@@ -151,7 +151,7 @@ for i1 = 1:length(fc)
                             % Define longitudinal reinforcement
                             rc = 0.5*D - section_data.cover(i3) - transverse_bar_size.diameter - 0.5*longitudinal_bar_size.diameter;
                             num_bars = sscanf(section_data.longitudinal_config{i3},'%i bars');
-                            reinforcement = reinf_circ(0,0,rc,num_bars,longitudinal_bar_size.area);
+                            reinforcement = reinf_circ(0,0,rc,num_bars,longitudinal_bar_size.area,longitudinal_bar_size.diameter);
 
                             % Define cross section
                             data(iData).section = RC(fc(i1),fy(i2),conc_cross_section,reinforcement,'US');
@@ -175,6 +175,7 @@ for i1 = 1:length(fc)
                             data(iData).dbt                 = transverse_bar_size.diameter;
                             data(iData).Abt                 = transverse_bar_size.area;
                             data(iData).s                   = s;
+                            data(iData).transverse_reinf_type = section_data.transverse_reinf_type{i3};
                             
                         otherwise
                             error('Unknown shape: %s',section_data.shape{i3})
