@@ -109,6 +109,8 @@ for i1 = 1:length(fc)
                             data(iData).nLegX               = nLegX;
                             data(iData).nLegY               = nLegY;
                             data(iData).s                   = str2double(section_data.s{i3});
+                            data(iData).longitudinal_config     = section_data.longitudinal_config{i3};
+                            data(iData).transverse_config       = section_data.transverse_config{i3};
                             data(iData).longitudinal_bar_size   = section_data.longitudinal_bar_size{i3};
                             data(iData).transverse_bar_size     = section_data.transverse_bar_size{i3};                   
                     
