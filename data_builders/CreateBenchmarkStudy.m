@@ -27,6 +27,14 @@ if build_data
             data = build_data_from_sections(build_sections_SRC('weak'));
         case 'RC'
             data = build_data_RC();
+        case {'WFx','WFx_noRS'}
+            data = build_data_from_sections_Maleck(build_sections_WF('x'));
+        case {'WFy','WFy_noRS'}
+            data = build_data_from_sections_Maleck(build_sections_WF('y'));
+        case 'RectangularHSS'
+            data = build_data_from_sections_Maleck(build_sections_RectangularHSS());
+        case 'RoundHSS'
+            data = build_data_from_sections_Maleck(build_sections_RoundHSS());            
         otherwise
             error('Unknown study name: %s',study_name)
     end
@@ -56,6 +64,15 @@ if build_options
             fiber_section_definition_options.ReinforcementMaterialType = 'ElasticSmallStiffness';
         case {'Maleck_SA','Maleck_WA'}
             fiber_section_definition_options.SteelMaterialType = 'ElasticSmallStiffness';
+        case {'WFx','WFy'}
+            fiber_section_definition_options.SteelMaterialType = 'ElasticSmallStiffness';
+            fiber_section_definition_options.includeFillet = true;
+        case {'WFx_noRS','WFy_noRS'}
+            fiber_section_definition_options.SteelMaterialType = 'ElasticSmallStiffness';
+            fiber_section_definition_options.includeFillet = true;
+            fiber_section_definition_options.include_residual_stress = false;
+        case {'RectangularHSS','RoundHSS'}
+            fiber_section_definition_options.SteelMaterialType = 'AbdelRahman';
         otherwise
             error('Unknown study name: %s',study_name)
     end
