@@ -7,5 +7,7 @@ switch data.frame_type
     otherwise
         error('Unknown frame type: %s',data.frame_type);
 end
-obj.EIeff_type = EIeff_type;
+if nargin > 1
+    obj.EIeff_type = EIeff_type;
+end
 end
