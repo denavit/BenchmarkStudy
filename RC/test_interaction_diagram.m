@@ -45,27 +45,31 @@ P2_SOEA = max(P2_SOEA,-P_at_PeakMomentRatio);
 
 
 %% Make Plot
+my_colors = lines(5);
+
 hf = fs.figure(8,6);
-ha = fs.axes([0.15 0.15 0.80 0.80]);
-plot(BA.InteractionDiagram_M,-BA.InteractionDiagram_P)
+ha = fs.axes([0.10 0.10 0.85 0.85]);
+plot(BA.InteractionDiagram_M,-BA.InteractionDiagram_P,'Color',my_colors(1,:))
 
-plot(M1_a,-P_a,'r-')
-plot(M2_a,-P_a,'r--')
+plot(M1_a,-P_a, '-','Color',my_colors(2,:))
+plot(M2_a,-P_a,'--','Color',my_colors(2,:))
 
-plot(M1_b,-P_b,'k-')
-plot(M2_b,-P_b,'k--')
+plot(M1_b,-P_b, '-','Color',my_colors(3,:))
+plot(M2_b,-P_b,'--','Color',my_colors(3,:))
 
-plot(M1_c,-P_c,'g-')
-plot(M2_c,-P_c,'g--')
+plot(M1_c,-P_c, '-','Color',my_colors(4,:))
+plot(M2_c,-P_c,'--','Color',my_colors(4,:))
 
-plot(M1_SOEA,-P1_SOEA,'b-')
-plot(M2_SOEA,-P2_SOEA,'b--')
+plot(M1_SOEA,-P1_SOEA, '-','Color',my_colors(5,:))
+plot(M2_SOEA,-P2_SOEA,'--','Color',my_colors(5,:))
 
 legend('Cross Section',...
     'M_1 - EI_{eff} Type (a)','M_2 - EI_{eff} Type (a)',...
     'M_1 - EI_{eff} Type (b)','M_2 - EI_{eff} Type (b)',...
     'M_1 - EI_{eff} Type (c)','M_2 - EI_{eff} Type (c)',...
+    'M_1 - 2nd-Order','M_2 - 2nd-Order',...
     'Location','NE')
+legend('BoxOff')
 
 axis_limits('Quadrant',1)
 xlabel('Bending Moment (kip-in)')
