@@ -17,7 +17,7 @@ L_over_H    = [5 10 15 20 25 30 35 40];
 
 % Boundary Conditions
 num_boundary_conditions = 9;
-Gg          = [0 1 2 3 4];
+Psi         = [0 1 2 4 8];
 beta        = [-0.5 0.0 0.5 1.0];
 
 % Constants
@@ -185,10 +185,10 @@ for i1 = 1:length(fc)
                     
                     if i5 <= 5
                         data(iData).frame_type = 'Sidesway_Uninhibited';
-                        data(iData).Gg = Gg(i5);
-                        data(iData).EcIgb_over_Lb = 2/Gg(i5)*(Ec(i1)*data(iData).section.Ig(data(iData).axis)/data(iData).L);
-                        data(iData).kqtop = Inf; % @todo - compute from Gg 
-                        data(iData).kqbot = Inf; % @todo - compute from Gg
+                        data(iData).Psi = Psi(i5);
+                        kq = 6*0.7*data(iData).Ec*data(iData).section.Ig(data(iData).axis)/data(iData).L/data(iData).Psi;
+                        data(iData).kqtop = kq;
+                        data(iData).kqbot = kq;
                         data(iData).gamma = 0.0;
                         data(iData).delta0 = 0.0; % @todo - better value
                         data(iData).Delta0 = 0.0; % @todo - better value
