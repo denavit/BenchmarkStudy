@@ -50,6 +50,16 @@ classdef BenchmarkAnalysis2d_ACI_Sway_Frame < BenchmarkAnalysis2d_ACI_Base
             end
             cm = 0.6-0.4*m1m2;
         end
+        function k = K(obj)
+            % The stiffness of the column is taken as 0.7EcIg 
+            % The stiffness of the beams is taken as 0.35EcIg 
+            % per Section R6.6.4.4.3 of ACI 318-19
+            Ec = obj.section.Ec;
+            Ig = obj.section.Ig(obj.axis);
+            G_top = (0.7*Ec*Ig/obj.L)/(0.35*obj.EcIgb_over_Lb_top);
+            G_bot = (0.7*Ec*Ig/obj.L)/(0.35*obj.EcIgb_over_Lb_bot);
+            k = nomographK_sidesway_uninhibited(G_top,G_bot);
+        end
         function results = run_to_peak_proportional(obj,e)
             if nargin < 2
                 e = 0;
@@ -84,12 +94,9 @@ classdef BenchmarkAnalysis2d_ACI_Sway_Frame < BenchmarkAnalysis2d_ACI_Base
                     
                     % Compute Second Order Moment Ratio
                     EIeff   = obj.EIeff('sway',Mc(i),P(i));
-                    G_top   = (EIeff/obj.L)/obj.EcIgb_over_Lb_top;
-                    G_bot   = (EIeff/obj.L)/obj.EcIgb_over_Lb_bot;
-                    K       = nomographK_sidesway_uninhibited(G_top,G_bot);
-                    Pc      = pi^2*EIeff/(K*obj.L)^2;
                     delta   = max(obj.Cm./(1-(-P(i))/(0.75*Pc)),1);
                     delta_s = max(1./(1-(-P(i))/(0.75*Pc)),1);
+                    Pc      = pi^2*EIeff/(obj.K*obj.L)^2;
                     second_order_moment_ratio(i) = max(delta,delta_s);
                     
                     % Check stopping points
@@ -105,10 +112,7 @@ classdef BenchmarkAnalysis2d_ACI_Sway_Frame < BenchmarkAnalysis2d_ACI_Base
                 end
             else
                 EIeff   = obj.EIeff('sway');
-                G_top   = (EIeff/obj.L)/obj.EcIgb_over_Lb_top;
-                G_bot   = (EIeff/obj.L)/obj.EcIgb_over_Lb_bot;
-                K       = nomographK_sidesway_uninhibited(G_top,G_bot);
-                Pc      = pi^2*EIeff/(K*obj.L)^2;
+                Pc      = pi^2*EIeff/(obj.K*obj.L)^2;
                 
                 P       = linspace(0,-min(0.851*obj.section.Po,0.749*Pc),num_points);
                 
@@ -145,10 +149,6 @@ classdef BenchmarkAnalysis2d_ACI_Sway_Frame < BenchmarkAnalysis2d_ACI_Base
                 
                 for i = 1:num_points
                     EIeff   = obj.EIeff('sway',Mc(i),P(i));
-                    G_top   = (EIeff/obj.L)/obj.EcIgb_over_Lb_top;
-                    G_bot   = (EIeff/obj.L)/obj.EcIgb_over_Lb_bot;
-                    K       = nomographK_sidesway_uninhibited(G_top,G_bot);
-                    Pc      = pi^2*EIeff/(K*obj.L)^2;
                                         
                     if P > -0.75*Pc
                         delta   = max(obj.Cm./(1-(-P(i))/(0.75*Pc)),1);
@@ -156,14 +156,12 @@ classdef BenchmarkAnalysis2d_ACI_Sway_Frame < BenchmarkAnalysis2d_ACI_Base
                         
                         delta_s = max(1./(1-(-P(i))/(0.75*Pc)),1);
                         M2s(i)  = M2/delta_s;
+                    Pc      = pi^2*EIeff/(obj.K*obj.L)^2;
                     end
                 end     
             else
                 EIeff   = obj.EIeff('sway');
-                G_top   = (EIeff/obj.L)/obj.EcIgb_over_Lb_top;
-                G_bot   = (EIeff/obj.L)/obj.EcIgb_over_Lb_bot;
-                K       = nomographK_sidesway_uninhibited(G_top,G_bot);
-                Pc      = pi^2*EIeff/(K*obj.L)^2;
+                Pc      = pi^2*EIeff/(obj.K*obj.L)^2;
                 
                 P       = Pa*ones(1,num_points);
                 M2s     = linspace(0,max(obj.InteractionDiagram_M),num_points);
@@ -204,13 +202,10 @@ if P > 0
     return
 end
 EIeff   = obj.EIeff('sway',M2,P);
-G_top   = (EIeff/obj.L)/obj.EcIgb_over_Lb_top;
-G_bot   = (EIeff/obj.L)/obj.EcIgb_over_Lb_bot;
-K       = nomographK_sidesway_uninhibited(G_top,G_bot);
-Pc      = pi^2*EIeff/(K*obj.L)^2;
 if P < -0.75*Pc 
     err = Inf;
     return
+Pc      = pi^2*EIeff/(obj.K*obj.L)^2;
 end
 delta   = max(obj.Cm./(1-(-P)/(0.75*Pc)),1);
 M2min   = (-P)*obj.minimum_eccentricity;
