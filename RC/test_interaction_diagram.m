@@ -10,10 +10,15 @@ load(study.path_of_data,'data')
 iData = 39;
 %iData = 1012;
 
+include_strength_reduction  = false;
+include_stiffness_reduction = false;
+
 %% Moment Magnification
 num_points = 40;
 
 BA = BenchmarkAnalysis2d_ACI(data(iData));
+BA.include_strength_reduction = include_strength_reduction;
+BA.include_stiffness_reduction = include_stiffness_reduction;
 
 BA.EIeff_type = 'a';
 [P_a,M1_a,~,M2_a] = BA.design_interaction(num_points);
@@ -27,14 +32,23 @@ BA.EIeff_type = 'c';
 %% Second-Order Elastic Analysis
 num_points = 40;
 
-EI = 0.7*data(iData).section.Ec*data(iData).section.Ig(data(iData).axis);
+if include_stiffness_reduction
+    EI = 0.7*data(iData).section.Ec*data(iData).section.Ig(data(iData).axis);
+else
+    EI = 0.8*data(iData).section.Ec*data(iData).section.Ig(data(iData).axis);
+end
 elastic_frame = BenchmarkAnalysis2d_Elastic(data(iData),EI);
 elastic_frame.includeInitialGeometricImperfections = false;
 
 notionalLoadObject = notional_load(0.000,0.000,Inf);
 
+if include_strength_reduction
+    designStrengthType = 'FactoredACI';
+else
+    designStrengthType = 'ACI';
+end
 [P1_SOEA,M1_SOEA,P2_SOEA,M2_SOEA] = elastic_frame.designInteraction(...
-    data(iData).section,data(iData).axis,'ACI',num_points,...
+    data(iData).section,data(iData).axis,designStrengthType,num_points,...
     notionalLoadObject,'zero',1.0,1.0,'none');
 
 P_at_PeakMomentRatio = elastic_frame.determineLoadForMomentRatio(1.4,1.0,1.0,'none',nan);
@@ -47,9 +61,13 @@ P2_SOEA = max(P2_SOEA,-P_at_PeakMomentRatio);
 %% Make Plot
 my_colors = lines(5);
 
-hf = fs.figure(8,6);
+hf = fs.figure(8,5);
 ha = fs.axes([0.10 0.10 0.85 0.85]);
-plot(BA.InteractionDiagram_M,-BA.InteractionDiagram_P,'Color',my_colors(1,:))
+if include_strength_reduction
+    plot(BA.id2d_red.idX,-BA.id2d_red.idY,'Color',my_colors(1,:))
+else
+    plot(BA.id2d_nom.idX,-BA.id2d_nom.idY,'Color',my_colors(1,:)) 
+end
 
 plot(M1_a,-P_a, '-','Color',my_colors(2,:))
 plot(M2_a,-P_a,'--','Color',my_colors(2,:))

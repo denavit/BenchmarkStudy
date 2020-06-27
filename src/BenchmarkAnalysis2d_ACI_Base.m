@@ -14,6 +14,8 @@ classdef BenchmarkAnalysis2d_ACI_Base
         id2d_nom
         id2d_red
         
+        include_strength_reduction = true;
+        include_stiffness_reduction = true;
         second_order_moment_ratio_limit = 1.4;
         EIeff_type = 'a';        
     end
@@ -128,7 +130,11 @@ classdef BenchmarkAnalysis2d_ACI_Base
                     
             % Cross Section Strength Limit
             limit_cross_section_strength = struct;
-            [M2,P,ind,x] = obj.id2d_nom.findIntersection(results.path.M2,results.path.P);
+            if obj.include_strength_reduction
+                [M2,P,ind,x] = obj.id2d_red.findIntersection(results.path.M2,results.path.P);
+            else
+                [M2,P,ind,x] = obj.id2d_nom.findIntersection(results.path.M2,results.path.P);
+            end
             if isempty(ind)
                 limit_cross_section_strength.P    = nan;
                 limit_cross_section_strength.M1   = nan;

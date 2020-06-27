@@ -94,9 +94,14 @@ classdef BenchmarkAnalysis2d_ACI_Sway_Frame < BenchmarkAnalysis2d_ACI_Base
                     
                     % Compute Second Order Moment Ratio
                     EIeff   = obj.EIeff('sway',Mc(i),P(i));
-                    delta   = max(obj.Cm./(1-(-P(i))/(0.75*Pc)),1);
-                    delta_s = max(1./(1-(-P(i))/(0.75*Pc)),1);
                     Pc      = pi^2*EIeff/(obj.K*obj.L)^2;
+                    if obj.include_stiffness_reduction
+                        delta   = max(obj.Cm./(1-(-P(i))/(0.75*Pc)),1);
+                        delta_s = max(1./(1-(-P(i))/(0.75*Pc)),1);
+                    else
+                        delta   = max(obj.Cm./(1-(-P(i))/Pc),1);
+                        delta_s = max(1./(1-(-P(i))/Pc),1);
+                    end
                     second_order_moment_ratio(i) = max(delta,delta_s);
                     
                     % Check stopping points
@@ -105,23 +110,35 @@ classdef BenchmarkAnalysis2d_ACI_Sway_Frame < BenchmarkAnalysis2d_ACI_Base
                         break
                     end
                     
-                    if obj.id2d_nom.checkPoints(Mc(i),P(i)) > 1
-                        % Cross section strength reached
-                        break
+                    if obj.include_strength_reduction
+                        if obj.id2d_red.checkPoints(Mc(i),P(i)) > 1
+                            % Cross section strength reached
+                            break
+                        end
+                    else
+                        if obj.id2d_nom.checkPoints(Mc(i),P(i)) > 1
+                            % Cross section strength reached
+                            break
+                        end
                     end
                 end
             else
                 EIeff   = obj.EIeff('sway');
                 Pc      = pi^2*EIeff/(obj.K*obj.L)^2;
                 
-                P       = linspace(0,-min(0.851*obj.section.Po,0.749*Pc),num_points);
+                if obj.include_stiffness_reduction
+                    P = linspace(0,-min(0.851*obj.section.Po,0.749*Pc),num_points);
+                    delta = max(obj.Cm./(1-(-P)/(0.75*Pc)),1);
+                    delta_s = max(1./(1-(-P)/(0.75*Pc)),1);
+                else
+                    P = linspace(0,-min(0.851*obj.section.Po,0.99*Pc),num_points);
+                    delta = max(obj.Cm./(1-(-P)/Pc),1);
+                    delta_s = max(1./(1-(-P)/Pc),1);
+                end
                 
                 % eccentricity is zero, M1s is zero
-                delta   = max(obj.Cm./(1-(-P)/(0.75*Pc)),1);
-                M2min   = (-P)*obj.minimum_eccentricity;
-                Mc      = delta.*M2min;
-                
-                delta_s = max(1./(1-(-P)/(0.75*Pc)),1);
+                M2min = (-P)*obj.minimum_eccentricity;
+                Mc = delta.*M2min;    
                 second_order_moment_ratio = max(delta,delta_s);
             end
             
@@ -142,21 +159,35 @@ classdef BenchmarkAnalysis2d_ACI_Sway_Frame < BenchmarkAnalysis2d_ACI_Base
             if strcmpi(obj.EIeff_type,'c') || strcmpi(obj.EIeff_type,'6.6.4.4.4c')
                 
                 P       = Pa*ones(1,num_points);
-                Mc_max  = obj.id2d_nom.findXgivenY(Pa,'pos');
+                if obj.include_strength_reduction
+                    Mc_max  = obj.id2d_red.findXgivenY(Pa,'pos');
+                else
+                    Mc_max  = obj.id2d_nom.findXgivenY(Pa,'pos');
+                end
                 Mc      = linspace(0,Mc_max,num_points);
                 
                 M2s     = nan(1,num_points);
                 
                 for i = 1:num_points
                     EIeff   = obj.EIeff('sway',Mc(i),P(i));
-                                        
-                    if P > -0.75*Pc
-                        delta   = max(obj.Cm./(1-(-P(i))/(0.75*Pc)),1);
-                        M2      = Mc(i)/delta;
-                        
-                        delta_s = max(1./(1-(-P(i))/(0.75*Pc)),1);
-                        M2s(i)  = M2/delta_s;
                     Pc      = pi^2*EIeff/(obj.K*obj.L)^2;
+                    
+                    if obj.include_stiffness_reduction
+                        if P > -0.75*Pc
+                            delta   = max(obj.Cm./(1-(-P(i))/(0.75*Pc)),1);
+                            M2      = Mc(i)/delta;
+
+                            delta_s = max(1./(1-(-P(i))/(0.75*Pc)),1);
+                            M2s(i)  = M2/delta_s;
+                        end
+                    else
+                        if P > -Pc
+                            delta   = max(obj.Cm./(1-(-P(i))/Pc),1);
+                            M2      = Mc(i)/delta;
+
+                            delta_s = max(1./(1-(-P(i))/Pc),1);
+                            M2s(i)  = M2/delta_s;
+                        end
                     end
                 end     
             else
@@ -166,11 +197,15 @@ classdef BenchmarkAnalysis2d_ACI_Sway_Frame < BenchmarkAnalysis2d_ACI_Base
                 P       = Pa*ones(1,num_points);
                 M2s     = linspace(0,max(obj.InteractionDiagram_M),num_points);
                 
-                delta_s = max(1./(1-(-P)/(0.75*Pc)),1);
-                M2      = delta_s.*M2s; % M1ns is zero
-                
-                delta   = max(obj.Cm./(1-(-P)/(0.75*Pc)),1);
-                Mc      = delta.*max(M2,-P*obj.minimum_eccentricity);
+                if obj.include_stiffness_reduction
+                    delta_s = max(1./(1-(-P)/(0.75*Pc)),1);
+                    delta   = max(obj.Cm./(1-(-P)/(0.75*Pc)),1);
+                else
+                    delta_s = max(1./(1-(-P)/Pc),1);
+                    delta   = max(obj.Cm./(1-(-P)/Pc),1);
+                end
+                M2 = delta_s.*M2s; % M1ns is zero
+                Mc = delta.*max(M2,-P*obj.minimum_eccentricity);
             end
             
             results = struct;
@@ -202,12 +237,22 @@ if P > 0
     return
 end
 EIeff   = obj.EIeff('sway',M2,P);
-if P < -0.75*Pc 
-    err = Inf;
-    return
 Pc      = pi^2*EIeff/(obj.K*obj.L)^2;
+
+if obj.include_stiffness_reduction
+    if P < -0.75*Pc
+        err = Inf;
+        return
+    end
+    delta = max(obj.Cm./(1-(-P)/(0.75*Pc)),1);
+else
+    if P < -Pc
+        err = Inf;
+        return
+    end
+    delta = max(obj.Cm./(1-(-P)/Pc),1);
 end
-delta   = max(obj.Cm./(1-(-P)/(0.75*Pc)),1);
+
 M2min   = (-P)*obj.minimum_eccentricity;
 Mc      = delta.*M2min;
 err     = Mc-M2;
