@@ -33,11 +33,11 @@ BA.EIeff_type = 'c';
 num_points = 40;
 
 if include_stiffness_reduction
-    EI = 0.7*data(iData).section.Ec*data(iData).section.Ig(data(iData).axis);
+    EI_option = 'RC_Study_With_Stiffness_Reduction';
 else
-    EI = 0.8*data(iData).section.Ec*data(iData).section.Ig(data(iData).axis);
+    EI_option = 'RC_Study_Without_Stiffness_Reduction';
 end
-elastic_frame = BenchmarkAnalysis2d_Elastic(data(iData),EI);
+elastic_frame = BenchmarkAnalysis2d_Elastic(data(iData),EI_option);
 elastic_frame.includeInitialGeometricImperfections = false;
 
 notionalLoadObject = notional_load(0.000,0.000,Inf);

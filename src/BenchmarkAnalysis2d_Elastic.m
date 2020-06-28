@@ -3,7 +3,17 @@ if nargin > 1
     if isnumeric(EI)
         data.EI = EI;
     elseif ischar(EI)
-        data.EI = data.section.EI(data.axis,EI);
+        if strcmpi(EI,'RC_Study_With_Stiffness_Reduction')
+            data.EI = 0.7*data.section.Ec*data.section.Ig(data.axis);
+            data.kqtop = 6*0.35*data.EcIgb_over_Lb;
+            data.kqbot = 6*0.35*data.EcIgb_over_Lb;
+        elseif strcmpi(EI,'RC_Study_Without_Stiffness_Reduction')
+            data.EI = 0.8*data.section.Ec*data.section.Ig(data.axis);
+            data.kqtop = 6*0.4*data.EcIgb_over_Lb;
+            data.kqbot = 6*0.4*data.EcIgb_over_Lb;            
+        else
+            data.EI = data.section.EI(data.axis,EI);
+        end
     else
         error('Unknown EI type: %s',type(EI));
     end

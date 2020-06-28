@@ -184,13 +184,10 @@ for i1 = 1:length(fc)
                     end
                     
                     if i5 <= 5
-                        EcIgc_over_L = data(iData).Ec * data(iData).section.Ig(data(iData).axis) / data(iData).L;
-
                         data(iData).frame_type = 'Sidesway_Uninhibited';
                         data(iData).Psi = Psi(i5);
+                        EcIgc_over_L = data(iData).Ec * data(iData).section.Ig(data(iData).axis) / data(iData).L;
                         data(iData).EcIgb_over_Lb = 2*EcIgc_over_L/Psi(i5);
-                        data(iData).kqtop = 6*0.7*EcIgc_over_L/Psi(i5);
-                        data(iData).kqbot = 6*0.7*EcIgc_over_L/Psi(i5);
                         data(iData).gamma = 0.0;
                         data(iData).delta0 = 0.0; % @todo - better value
                         data(iData).Delta0 = 0.0; % @todo - better value
