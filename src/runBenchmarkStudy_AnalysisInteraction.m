@@ -48,7 +48,11 @@ for iData = selectedData
     waitbar(iData/numData,hwait,str);
     
     % Get cross section definition
-    sectionDef = FiberSectionDefinition(data(iData).section,data(iData).axis,1,1,fiberSectionDefinitionOptions);
+    if strcmp(study.study_name,'RC')
+        sectionDef = FiberSectionDefinition(data(iData),data(iData).axis,1,1,fiberSectionDefinitionOptions);
+    else
+        sectionDef = FiberSectionDefinition(data(iData).section,data(iData).axis,1,1,fiberSectionDefinitionOptions);
+    end
     
     % Create Analysis Object
     ba = BenchmarkAnalysis2d_OpenSees(data(iData),sectionDef,analysisOptions);
