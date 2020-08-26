@@ -27,8 +27,8 @@ if build_options
     fiber_section_definition_options = struct;
     fiber_section_definition_options.nf1 = 30;
     fiber_section_definition_options.includePackageDefinition = true;
-    fiber_section_definition_options.ConcreteMaterialType = 'Concrete04';
-    fiber_section_definition_options.ReinforcementMaterialType = 'ElasticPP';
+    fiber_section_definition_options.conc_material = 'Concrete04';
+    fiber_section_definition_options.steel_material = 'ElasticPP';
     study.set_fiber_section_definition_options('Strength',fiber_section_definition_options)
     
     % Define analysis_options
