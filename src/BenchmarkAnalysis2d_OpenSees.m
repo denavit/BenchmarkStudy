@@ -73,6 +73,8 @@ classdef BenchmarkAnalysis2d_OpenSees < OpenSeesAnalysis
                 for i = 1:length(names)
                     if ismember(names{i},pnames)
                         obj.(names{i}) = analysisOptions.(names{i});
+                    elseif strcmp(names{i},'store_extra_data')
+                        % do nothing
                     else
                         warning('Unknown option: %s',names{i})
                     end

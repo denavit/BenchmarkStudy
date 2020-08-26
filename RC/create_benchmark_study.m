@@ -34,6 +34,7 @@ if build_options
     % Define analysis_options
     analysis_options = struct;    
     analysis_options.absoluteStrainLimit = 0.05;
+    analysis_options.store_extra_data = false;
     study.set_analysis_options('Strength',analysis_options)
 end
     

@@ -20,6 +20,13 @@ numPoints = study.numPoints;
 % Set the working path
 analysisOptions.scratchPath = study.scratch_path;
 
+% Option to not store extra data
+if isfield(analysisOptions,'store_extra_data')
+    store_extra_data = analysisOptions.store_extra_data;
+else
+    store_extra_data = True;
+end
+
 %% Initilize Results Structure
 if newStudy
     results(numData) = struct;
@@ -144,24 +151,26 @@ for iData = selectedData
     
     % Store Extra Data
     results(iData).Pn_ana           = results(iData).P1(1);
-    results(iData).Pno              = data(iData).section.Pnco;
-    results(iData).Pn               = data(iData).section.Pnc(data(iData).axis);
-    results(iData).Mno              = data(iData).section.Mno(data(iData).axis);
-    results(iData).EIeff            = data(iData).section.EI(data(iData).axis,'ColumnStrength');
-    results(iData).EIgross          = data(iData).section.EI(data(iData).axis,'Gross');
-    results(iData).EsIs             = data(iData).section.getSectionData('GrossSteelFlexuralRigidity',data(iData).axis);
-    results(iData).EsIsr            = data(iData).section.getSectionData('GrossReinforcingFlexuralRigidity',data(iData).axis);
-    results(iData).EcIc             = data(iData).section.getSectionData('GrossConcreteFlexuralRigidity',data(iData).axis);
-    results(iData).AsFy             = data(iData).section.getSectionData('AsFy',data(iData).axis);
-    results(iData).Acfc             = data(iData).section.getSectionData('Acfc',data(iData).axis);
-    results(iData).Fy               = data(iData).section.getSectionData('SteelStrength');
-    results(iData).fc               = data(iData).section.getSectionData('ConcreteStrength');
-    results(iData).rhos             = data(iData).section.getSectionData('SteelRatio');
-    results(iData).rhosr            = data(iData).section.getSectionData('ReinforcingRatio');
-    results(iData).ShapeFactor      = data(iData).section.getSectionData('ShapeFactor',data(iData).axis);
-    
-    PnOverPo = -results(iData).P1(1)/results(iData).Pno;
-    results(iData).lambdaoe_equiv   = sqrt(AISC_inverse_column_curve(PnOverPo));
+    if store_extra_data
+        results(iData).Pno          = data(iData).section.Pnco;
+        results(iData).Pn           = data(iData).section.Pnc(data(iData).axis);
+        results(iData).Mno          = data(iData).section.Mno(data(iData).axis);
+        results(iData).EIeff        = data(iData).section.EI(data(iData).axis,'ColumnStrength');
+        results(iData).EIgross      = data(iData).section.EI(data(iData).axis,'Gross');
+        results(iData).EsIs         = data(iData).section.getSectionData('GrossSteelFlexuralRigidity',data(iData).axis);
+        results(iData).EsIsr        = data(iData).section.getSectionData('GrossReinforcingFlexuralRigidity',data(iData).axis);
+        results(iData).EcIc         = data(iData).section.getSectionData('GrossConcreteFlexuralRigidity',data(iData).axis);
+        results(iData).AsFy         = data(iData).section.getSectionData('AsFy',data(iData).axis);
+        results(iData).Acfc         = data(iData).section.getSectionData('Acfc',data(iData).axis);
+        results(iData).Fy           = data(iData).section.getSectionData('SteelStrength');
+        results(iData).fc           = data(iData).section.getSectionData('ConcreteStrength');
+        results(iData).rhos         = data(iData).section.getSectionData('SteelRatio');
+        results(iData).rhosr        = data(iData).section.getSectionData('ReinforcingRatio');
+        results(iData).ShapeFactor  = data(iData).section.getSectionData('ShapeFactor',data(iData).axis);
+        
+        PnOverPo = -results(iData).P1(1)/results(iData).Pno;
+        results(iData).lambdaoe_equiv = sqrt(AISC_inverse_column_curve(PnOverPo));
+    end
 end
 fprintf('  analyses complete\n');
 close(hwait);
