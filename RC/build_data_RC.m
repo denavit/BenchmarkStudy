@@ -191,12 +191,12 @@ for i1 = 1:length(fc)
                         data(iData).kqtop = 6*0.4*data(iData).EcIgb_over_Lb; % Without stiffness reduction
                         data(iData).kqbot = 6*0.4*data(iData).EcIgb_over_Lb; % Without stiffness reduction
                         data(iData).gamma = 0.0;
-                        data(iData).delta0 = 0.0; % @todo - better value
-                        data(iData).Delta0 = 0.0; % @todo - better value
+                        data(iData).delta0 = data(iData).L/1000;
+                        data(iData).Delta0 = data(iData).L/500;
                     else
                         data(iData).frame_type = 'Sidesway_Inhibited';
                         data(iData).beta = beta(i5-5);
-                        data(iData).delta0 = 0.0; % @todo - better value
+                        data(iData).delta0 = data(iData).L/1000;
                     end
                     
                     iData = iData+1;
