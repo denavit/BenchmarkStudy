@@ -1,4 +1,4 @@
-function runBenchmarkStudy_ACI(study,tag,EIeff_type,second_order_moment_ratio_limit)
+function runBenchmarkStudy_ACI(study,tag,EIeff_type,include_strength_reduction,include_stiffness_reduction,second_order_moment_ratio_limit)
 
 %% Load Data
 % Load Sections
@@ -39,6 +39,8 @@ for iData = selectedData
 
     % ACI Analysis Object
     BA = BenchmarkAnalysis2d_ACI(data(iData),EIeff_type);
+    BA.include_strength_reduction = include_strength_reduction;
+    BA.include_stiffness_reduction = include_stiffness_reduction;
     BA.second_order_moment_ratio_limit = second_order_moment_ratio_limit;
     
     % Run Analysis 

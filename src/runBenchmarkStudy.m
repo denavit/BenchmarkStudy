@@ -77,26 +77,38 @@ switch action
         switch option 
             case 'a'
                 EIeff_type = 'a';
+                include_strength_reduction  = false;
+                include_stiffness_reduction = false;
                 second_order_moment_ratio_limit = 1.4;
                 
             case 'b'
                 EIeff_type = 'b';
+                include_strength_reduction  = false;
+                include_stiffness_reduction = false;
                 second_order_moment_ratio_limit = 1.4;
                 
             case 'c'
                 EIeff_type = 'c';
+                include_strength_reduction  = false;
+                include_stiffness_reduction = false;
                 second_order_moment_ratio_limit = 1.4;
                 
             case 'a - no limit'
                 EIeff_type = 'a';
+                include_strength_reduction  = false;
+                include_stiffness_reduction = false;
                 second_order_moment_ratio_limit = Inf;
                 
             case 'b - no limit'
                 EIeff_type = 'b';
+                include_strength_reduction  = false;
+                include_stiffness_reduction = false;
                 second_order_moment_ratio_limit = Inf;
                 
             case 'c - no limit'
                 EIeff_type = 'c';
+                include_strength_reduction  = false;
+                include_stiffness_reduction = false;
                 second_order_moment_ratio_limit = Inf;
                 
             otherwise
@@ -107,7 +119,7 @@ switch action
         if delete_previous && ~isempty(study.check_results_tag(tag))
             study.remove_results_file(tag);
         end
-        runBenchmarkStudy_ACI(study,tag,EIeff_type,second_order_moment_ratio_limit)
+        runBenchmarkStudy_ACI(study,tag,EIeff_type,include_strength_reduction,include_stiffness_reduction,second_order_moment_ratio_limit)
        
     case 'ACI Interaction (Section)'
         
