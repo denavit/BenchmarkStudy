@@ -85,12 +85,37 @@ classdef BenchmarkAnalysis2d_ACI_Sway_Frame < BenchmarkAnalysis2d_ACI_Base
                     else
                         P_guess = P(i-1);
                     end 
-                    [P(i),~,exitflag,output] = fsolve(@(p)error_EI_type_c(obj,p,0,Mc(i)),P_guess,opts);
+                    [Pi,~,exitflag,~] = fsolve(@(p)error_EI_type_c(obj,p,0,Mc(i)),P_guess,opts);
 
                     if exitflag <= 0
-                        fprintf('%s\n',output.message);
-                        error('fsolve unable to find a solution')
+                        if ~isinf(error_EI_type_c(obj,0.75*P_guess,0,Mc(i)))
+                            [Pi,~,exitflag,~] = fsolve(@(p)error_EI_type_c(obj,p,0,Mc(i)),0.75*P_guess,opts);
+                        end
+                        
+                        if exitflag <= 0
+                            if ~isinf(error_EI_type_c(obj,0.5*P_guess,0,Mc(i)))
+                                [Pi,~,exitflag,~] = fsolve(@(p)error_EI_type_c(obj,p,0,Mc(i)),0.5*P_guess,opts);
+                            end
+                            
+                            if exitflag <= 0
+                                if ~isinf(error_EI_type_c(obj,0.25*P_guess,0,Mc(i)))
+                                    [Pi,~,exitflag,~] = fsolve(@(p)error_EI_type_c(obj,p,0,Mc(i)),0.25*P_guess,opts);
+                                end
+                                
+                                if exitflag <= 0
+                                    if ~isinf(error_EI_type_c(obj,0,0,Mc(i)))
+                                        [Pi,~,exitflag,output] = fsolve(@(p)error_EI_type_c(obj,p,0,Mc(i)),0,opts);
+                                    end
+                                    
+                                    if exitflag <= 0
+                                        fprintf('%s\n',output.message);
+                                        error('fsolve unable to find a solution')
+                                    end
+                                end
+                            end
+                        end                    
                     end
+                    P(i) = Pi;
                     
                     % Compute Second Order Moment Ratio
                     EIeff   = obj.EIeff('sway',Mc(i),P(i));
