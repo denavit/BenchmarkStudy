@@ -19,7 +19,7 @@ classdef BenchmarkAnalysis2d_ACI_Nonsway_Frame < BenchmarkAnalysis2d_ACI_Base
                 obj.beta    = beta;
             end
             
-            num_points = 50;            
+            num_points = 100;            
             sc = obj.section.strainCompatibilityAciObject;
             switch lower(obj.axis)
                 case {'x','z'}

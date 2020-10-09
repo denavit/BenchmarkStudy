@@ -22,7 +22,7 @@ classdef BenchmarkAnalysis2d_ACI_Sway_Frame < BenchmarkAnalysis2d_ACI_Base
                 obj.EcIgb_over_Lb_bot = EcIgb_over_Lb;
             end
             
-            num_points = 50;            
+            num_points = 100;            
             sc = obj.section.strainCompatibilityAciObject;
             switch lower(obj.axis)
                 case {'x','z'}
