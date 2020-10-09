@@ -112,14 +112,16 @@ classdef BenchmarkAnalysis2d_ACI_Nonsway_Frame < BenchmarkAnalysis2d_ACI_Base
 
                 if obj.include_stiffness_reduction
                     P  = linspace(0,-min(0.851*obj.section.Po,0.749*Pc),1000);
-                    M1 = P*max(obj.minimum_eccentricity,e);
+                    M1 = -P*e;
+                    M1_with_ecc = max(M1,-P*obj.minimum_eccentricity);
                     delta = max(obj.Cm./(1-(-P)/(0.75*Pc)),1);
                 else
                     P  = linspace(0,-min(0.851*obj.section.Po,0.99*Pc),1000);
-                    M1 = P*max(obj.minimum_eccentricity,e);
+                    M1 = -P*e;
+                    M1_with_ecc = max(M1,-P*obj.minimum_eccentricity);
                     delta = max(obj.Cm./(1-(-P)/Pc),1);
                 end
-                M2 = delta.*M1;
+                M2 = delta.*M1_with_ecc;
             end
             
             results = struct;
