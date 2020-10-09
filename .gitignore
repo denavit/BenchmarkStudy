@@ -4,3 +4,4 @@ results
 *.mat
 *.fig
 *.out
+*.svg
