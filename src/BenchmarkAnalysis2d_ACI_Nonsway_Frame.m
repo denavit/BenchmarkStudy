@@ -49,6 +49,9 @@ classdef BenchmarkAnalysis2d_ACI_Nonsway_Frame < BenchmarkAnalysis2d_ACI_Base
             end
             cm = 0.6-0.4*m1m2;
         end
+        function k = K(~)
+            k = 1;
+        end
         function results = run_to_peak_proportional(obj,e)
             if nargin < 2
                 e = 0;
