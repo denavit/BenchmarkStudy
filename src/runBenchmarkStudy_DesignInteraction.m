@@ -120,7 +120,7 @@ for iData = selectedData
                 data(iData).section.option_EI = 'AISC2016';
             end
             
-        case 'ACI 2011'
+        case 'ACI 2019'
             notionalLoadObject          = notional_load(0.000,0.000,Inf);
             effectiveLengthFactorType   = 'zero';
             columnStiffnessReduction    = 1.0;
@@ -128,10 +128,10 @@ for iData = selectedData
             tauType                     = 'none';
             peakMomentRatio             = 1.4;
             neglectInitialImperf        = true;
-            elasticStiffnessType        = 'ACI';
+            elasticStiffnessType        = '0.7EcIg';
             designStrengthType          = 'ACI';
             
-        case 'ACI 2011 (No Moment Ratio Limit)'
+        case 'ACI 2019 (No Moment Ratio Limit)'
             notionalLoadObject          = notional_load(0.000,0.000,Inf);
             effectiveLengthFactorType   = 'zero';
             columnStiffnessReduction    = 1.0;
@@ -139,7 +139,7 @@ for iData = selectedData
             tauType                     = 'none';
             peakMomentRatio             = [];                
             neglectInitialImperf        = true;
-            elasticStiffnessType        = 'ACI';
+            elasticStiffnessType        = '0.7EcIg';
             designStrengthType          = 'ACI';
             
         case 'Maleck (DA)'
