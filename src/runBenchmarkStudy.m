@@ -169,7 +169,7 @@ end
    
 t = toc;
 if t >= 60*60*24
-    fprintf('\nElapsed time is %s days %s\n',datestr(datenum(0,0,0,0,0,t),'dd'),datestr(datenum(0,0,0,0,0,t),'HH:MM:SS'));
+    fprintf('\nElapsed time is %s\n',datestr(datenum(0,0,0,0,0,t),'DD:HH:MM:SS'));
 elseif t >= 60
     fprintf('\nElapsed time is %s\n',datestr(datenum(0,0,0,0,0,t),'HH:MM:SS'));
 end
