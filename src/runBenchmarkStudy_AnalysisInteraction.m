@@ -24,7 +24,7 @@ analysisOptions.scratchPath = study.scratch_path;
 if isfield(analysisOptions,'store_extra_data')
     store_extra_data = analysisOptions.store_extra_data;
 else
-    store_extra_data = True;
+    store_extra_data = true;
 end
 
 %% Initilize Results Structure
@@ -75,11 +75,12 @@ for iData = selectedData
         iResults = ba.runAnalysis('LimitPoint_Proportional',0,[],1);
 
         if ~iResults.limitPoint.good
+            fprintf('Limit Point Not Obtained: Case %i, Axial Only - Try 1 - %s\n',iData,iResults.exitStatus);
             iResults = ba.runAnalysis('LimitPoint_Proportional',0,[],2);
         end
 
         if ~iResults.limitPoint.good
-            fprintf('Limit Point Not Obtained: Case %i, Axial Only\n',iData);
+            fprintf('Limit Point Not Obtained: Case %i, Axial Only - Try 2 (FINAL) - %s\n',iData,iResults.exitStatus);
         end
 
         limit_type{1} = iResults.limitPoint.limit_type;
@@ -104,15 +105,17 @@ for iData = selectedData
                 iResults = ba.runAnalysis('LimitPoint_NonProportional',P,[],1);
 
                 if ~iResults.limitPoint.good
+                    fprintf('Limit Point Not Obtained: Case %i, Axial Load Level %i (%g) - Try 1 - %s\n',iData,i,P,iResults.exitStatus);
                     iResults = ba.runAnalysis('LimitPoint_NonProportional',P,[],2);
                 end
 
                 if ~iResults.limitPoint.good
+                    fprintf('Limit Point Not Obtained: Case %i, Axial Load Level %i (%g) - Try 2 - %s\n',iData,i,P,iResults.exitStatus);
                     iResults = ba.runAnalysis('LimitPoint_NonProportional',P,[],3);
                 end
 
                 if ~iResults.limitPoint.good
-                    fprintf('Limit Point Not Obtained: Case %i, Axial Load Level %i (%g)\n',iData,i,P);
+                    fprintf('Limit Point Not Obtained: Case %i, Axial Load Level %i (%g) - Try 3 (FINAL) - %s\n',iData,i,P,iResults.exitStatus);
                 end
 
                 limit_type{i} = iResults.limitPoint.limit_type;
