@@ -74,6 +74,22 @@ for iData = selectedData
                 data(iData).section.option_EI = 'AISC2016';
             end
            
+        case 'AISC 2016 (DA) - no tau'
+            notionalLoadObject          = notional_load(0.001,0.002,1.7);
+            effectiveLengthFactorType   = 'one';
+            columnStiffnessReduction    = 0.8;
+            beamStiffnessReduction      = 0.8; 
+            tauType                     = 'none';
+            peakMomentRatio             = [];
+            neglectInitialImperf        = true;
+            elasticStiffnessType        = 'ColumnStrength';
+            designStrengthType          = 'AISC/in_plane';
+            % Modifications for composite
+            if data(iData).section.hasConcrete
+                tauType = 'Composite';
+                data(iData).section.option_EI = 'AISC2016';
+            end            
+            
         case 'AISC 2016 (DA) - Trial-ACDB'
             assert(data(iData).section.hasConcrete,'Section should be composite')
             data(iData).section.option_EI = 'AISC2016';
